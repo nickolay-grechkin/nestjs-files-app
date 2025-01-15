@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    container_name: nestjs-files-app
+    ports:
+      - "3000:3000"
+    # If you need environment variables, you can set them here:
+    # environment:
+    #   NODE_ENV: production
+    #   SOME_API_KEY: your-key
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    command: pnpm run start:prod
