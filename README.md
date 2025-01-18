@@ -27,7 +27,7 @@ A robust NestJS application that handles file uploads to Google Drive with backg
 
 Create a `.env` file in the root directory with the following variables:
 
-# Database
+### Database
 
 DATABASE_HOST=db
 DATABASE_PORT=5432
@@ -35,12 +35,12 @@ DATABASE_USER=your_user
 DATABASE_PASSWORD=your_password
 DATABASE_NAME=your_db_name
 
-# Redis
+### Redis
 
 REDIS_HOST=redis
 REDIS_PORT=6379
 
-# Google Drive
+### Google Drive
 
 CLIENT_EMAIL=your_service_account_email
 PRIVATE_KEY=your_private_key
@@ -84,6 +84,6 @@ The application will be available at `http://localhost:3000`
 
 ## Future Improvements
 
-- Store files uploading progress in the database instead of Redis to not overload memory
-- Implemented function to cleanup jobs queue
-- Use p-limit to limit the number of concurrent file uploads, because with using of Promise.allSettled() if fileUrls array is large, it will exceed rate limits and overwhelm the server
+- Store files uploading progress in the database instead of Redis to not overload memory.
+- Implement function to cleanup jobs queue.
+- Use p-limit library to limit the number of concurrent file uploads, because with using of Promise.allSettled() if fileUrls array is large, it will exceed rate limits and overwhelm the server.
