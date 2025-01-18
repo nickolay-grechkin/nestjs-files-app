@@ -1,85 +1,89 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS File Upload Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A robust NestJS application that handles file uploads to Google Drive with background processing capabilities. The service accepts URLs of files, downloads them, and uploads them to Google Drive while maintaining a database record of uploaded files.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Asynchronous file processing using Bull Queue
+- File upload progress tracking
+- Google Drive integration
+- PostgreSQL database for file records
+- Docker containerization
+- Input validation
+- Error handling
 
-## Project setup
+## Prerequisites
 
-```bash
-$ pnpm install
-```
+- Node.js (v20 or later)
+- pnpm
+- Docker and Docker Compose
+- Google Drive API credentials
+- Redis
+- PostgreSQL
 
-## Compile and run the project
+## Environment Variables
 
-```bash
-# development
-$ pnpm run start
+Create a `.env` file in the root directory with the following variables:
 
-# watch mode
-$ pnpm run start:dev
+# Database
 
-# production mode
-$ pnpm run start:prod
-```
+DATABASE_HOST=db
+DATABASE_PORT=5432
+DATABASE_USER=your_user
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=your_db_name
 
-## Run tests
+# Redis
 
-```bash
-# unit tests
-$ pnpm run test
+REDIS_HOST=redis
+REDIS_PORT=6379
 
-# e2e tests
-$ pnpm run test:e2e
+# Google Drive
 
-# test coverage
-$ pnpm run test:cov
-```
+CLIENT_EMAIL=your_service_account_email
+PRIVATE_KEY=your_private_key
+GOOGLE_DRIVE_API_SCOPE=https://www.googleapis.com/auth/drive.file
+GOOGLE_DRIVE_FOLDER_ID=your_folder_id
 
-## Resources
+The application will be available at `http://localhost:3000`
 
-Check out a few resources that may come in handy when working with NestJS:
+## API Endpoints
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Upload Files
 
-## Support
+- **Endpoint:** `/files/upload`
+- **Method:** `POST`
+- **Description:** Creates a job to upload files from the provided URLs to Google Drive.
+- **Request Body:** `{ "fileUrls": ["https://example.com/file1.jpg", "https://example.com/file2.pdf"] }`
+- **Response:** `{ "jobId": "1234567890", "message": "Files uploading put in queue" }`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Get Job Progress
 
-## Stay in touch
+- **Endpoint:** `/files/progress/:jobId`
+- **Method:** `GET`
+- **Description:** Retrieves the progress of a file upload job.
+- **Request Parameters:** `{ jobId: "1234567890" }`
+- **Response:** `{ "state": "completed", "progress": 100 }`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Get All Files
 
-## License
+- **Endpoint:** `/files`
+- **Method:** `GET`
+- **Description:** Retrieves all uploaded files.
+- **Response:** `[{"id": 1, "driveFileId": "1234567890", "name": "file1.jpg", "webViewLink": "https://drive.google.com/file/d/1234567890/view", "webContentLink": "https://drive.google.com/uc?export=download&id=1234567890"}]`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Get File by Drive File ID
+
+- **Endpoint:** `/files/:driveFileId`
+- **Method:** `GET`
+- **Description:** Retrieves a file by its Google Drive file ID.
+- **Request Parameters:** `{ driveFileId: "1234567890" }`
+- **Response:** `{"id": 1, "driveFileId": "1234567890", "name": "file1.jpg", "webViewLink": "https://drive.google.com/file/d/1234567890/view", "webContentLink": "https://drive.google.com/uc?export=download&id=1234567890"}`
+
+## Future Improvements
+
+- Store files uploading progress in the database instead of Redis to not overload memory
+- Implemented function to cleanup jobs queue
+- Use p-limit to limit the number of concurrent file uploads, because with using of Promise.allSettled() if fileUrls array is large, it will exceed rate limits and overwhelm the server
